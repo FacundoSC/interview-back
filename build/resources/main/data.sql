@@ -999,7 +999,6 @@ insert into usuarios (name, username, password) values ('Kissee', 'kfiremanro@vk
 insert into usuarios (name, username, password) values ('Matthus', 'mlewsyrp@ycombinator.com', 'VJHLnXV');
 insert into usuarios (name, username, password) values ('Johanna', 'jtomasianrq@google.com.hk', 'uj0ABq');
 insert into usuarios (name, username, password) values ('Konstantine', 'kconnettrr@discovery.com', '014RLo7');
-<<<<<<< HEAD
 
 insert into SUSCRIPCIONES (id, partner, fk_user) values (1, 'disney', 1);
 insert into SUSCRIPCIONES (id, partner, fk_user) values (2, 'disney', 2);
@@ -1151,5 +1150,3 @@ insert into SUSCRIPCIONES (id, partner, fk_user) values (147, 'spotify', 147);
 insert into SUSCRIPCIONES (id, partner, fk_user) values (148, 'spotify', 148);
 insert into SUSCRIPCIONES (id, partner, fk_user) values (149, 'spotify', 149);
 insert into SUSCRIPCIONES (id, partner, fk_user) values (150, 'spotify', 150);
-=======
->>>>>>> 16e87f19f5a2a3c038471e58aa82938cccba0a1b

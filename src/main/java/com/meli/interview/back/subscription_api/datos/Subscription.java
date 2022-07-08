@@ -2,7 +2,6 @@ package com.meli.interview.back.subscription_api.datos;
 
 import javax.persistence.*;
 
-
 @Entity
 @Table(name = "suscripciones")
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -11,6 +10,7 @@ public class Subscription {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @Column
     private String partner;
 

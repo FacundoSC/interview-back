@@ -1,6 +1,7 @@
 package com.meli.interview.back.subscription_api.exception.handler;
 
 import com.meli.interview.back.subscription_api.datos.DTO.ResponseInfoDTO;
+import com.meli.interview.back.subscription_api.exception.FriendNotFoundException;
 import com.meli.interview.back.subscription_api.exception.UserNotFoundException;
 import com.meli.interview.back.subscription_api.exception.UserNotLoggedInException;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({UserNotFoundException.class})
     public ResponseEntity<ResponseInfoDTO> userNotFoundException(UserNotFoundException userNotFoundException, HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseInfoDTO(userNotFoundException.getMessage(),
+                request.getRequestURI(),
+                HttpStatus.NOT_FOUND.value()));
+    }
+
+    @ExceptionHandler({FriendNotFoundException.class})
+    public ResponseEntity<ResponseInfoDTO> friendNotFoundException(FriendNotFoundException friendNotFoundException, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseInfoDTO(friendNotFoundException.getMessage(),
                 request.getRequestURI(),
                 HttpStatus.NOT_FOUND.value()));
     }

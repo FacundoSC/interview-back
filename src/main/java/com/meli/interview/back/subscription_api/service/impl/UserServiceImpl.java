@@ -1,6 +1,7 @@
 package com.meli.interview.back.subscription_api.service.impl;
 
 import com.meli.interview.back.subscription_api.datos.DTO.UserRequestDTO;
+import com.meli.interview.back.subscription_api.datos.DTO.UserResponseDTO;
 import com.meli.interview.back.subscription_api.datos.User;
 import com.meli.interview.back.subscription_api.datos.UserSession;
 import com.meli.interview.back.subscription_api.exception.UserNotFoundException;
@@ -10,6 +11,7 @@ import com.meli.interview.back.subscription_api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,21 +21,25 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public User getUser(Integer id) {
-        return userRepository.getById(id);
+    public UserResponseDTO save(User user) {
+        User newUser = userRepository.save(user);
+        return new UserResponseDTO(newUser.getName(), newUser.getUsername());
     }
 
     @Override
-    public User save(User user) {
+    public List<UserResponseDTO> findAll() {
+        List<UserResponseDTO> userResponseDTOList = new ArrayList<>();
+        List<User> userList = userRepository.findAll();
 
-        return userRepository.save(user);
+        for (User user : userList) { //TODO Se podría aplicar parallel para que sea más rápido
+            userResponseDTOList.add(new UserResponseDTO(user.getName(),
+                    user.getUsername(),
+                    convertFriendList(user.getFriends()),
+                    user.getSubscriptions()));
+        }
+
+        return userResponseDTOList;
     }
-
-    @Override
-    public List<User> findAll() {
-        return userRepository.findAll();
-    }
-
 
     @Override
     public User obtenerUsuarioPorCredenciales(UserRequestDTO usuario) throws UserNotLoggedInException {
@@ -57,27 +63,45 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public User addFriend(String newFriendUsername) {
+    public UserResponseDTO addFriend(String newFriendUsername) {
 
         User newFriend = checkUserExistence(newFriendUsername);
         User currentUser = UserSession.getInstance().getLoggedUser();
 
         if (!currentUser.getFriends().contains(newFriend)) {
             currentUser.addFriend(newFriend);
+            newFriend.addFriend(currentUser);
+
+            userRepository.save(newFriend);
             userRepository.save(currentUser);
         }
 
-        return currentUser;
+        return new UserResponseDTO(currentUser.getName(),
+                currentUser.getUsername(),
+                convertFriendList(currentUser.getFriends()),
+                currentUser.getSubscriptions());
     }
 
     private User checkUserExistence(String usernameToCheck) {
         User userToCheck = userRepository.findByUsername(usernameToCheck);
 
         if (userToCheck != null) {
-            return userRepository.findByUsername(usernameToCheck); //userToCheck
+            return userToCheck;
         } else {
             throw new UserNotFoundException("El usuario no existe");
         }
+    }
+
+    private ArrayList<String> convertFriendList(List<User> friendList) {
+        ArrayList<String> friendStringList = new ArrayList<>();
+
+        if (!friendList.isEmpty()) {
+            for (User user : friendList) { //TODO Se podría aplicar parallel para que sea más rápido
+                friendStringList.add(user.getUsername());
+            }
+        }
+
+        return friendStringList;
     }
 
 }

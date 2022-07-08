@@ -23,7 +23,7 @@
 hs_err_pid*
 
 
-# Android Studio
+# Archivos y carpetas eliminados
 .idea
 build/
 cache.properties.lock

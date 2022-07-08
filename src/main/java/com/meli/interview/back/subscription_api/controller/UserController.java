@@ -1,17 +1,16 @@
 package com.meli.interview.back.subscription_api.controller;
 
-
 import com.meli.interview.back.subscription_api.repository.UserRepository;
 import com.meli.interview.back.subscription_api.service.SubscriptionService;
 import com.meli.interview.back.subscription_api.service.UserService;
 import com.meli.interview.back.subscription_api.datos.Role;
 import com.meli.interview.back.subscription_api.datos.User;
 import com.meli.interview.back.subscription_api.util.JWTUtil;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 

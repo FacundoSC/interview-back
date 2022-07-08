@@ -1,9 +1,6 @@
 package com.meli.interview.back.subscription_api.datos;
 
-import com.meli.interview.back.subscription_api.datos.User;
-
 import javax.persistence.*;
-
 
 @Entity
 @Table(name = "suscripciones")
@@ -13,6 +10,7 @@ public class Subscription {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @Column
     private String partner;
 
@@ -22,20 +20,21 @@ public class Subscription {
 
     public float getPrice() {
         float price = 0;
-        if (partner.equals("disney")) {
-            price = 100;
-        }
+        String partner = this.partner;
 
-        if (partner.equals("netflix")) {
-            price = 200;
-        }
+        switch (partner) {
+            case "disney":
+                price = 100;
+                break;
 
-        if (partner.equals("spotify")) {
-            price = 50;
-        } else {
-            price = 0;
-        }
+            case "netflix":
+                price = 200;
+                break;
 
+            case "spotify":
+                price = 50;
+                break;
+        }
         return price;
-     }
+    }
 }

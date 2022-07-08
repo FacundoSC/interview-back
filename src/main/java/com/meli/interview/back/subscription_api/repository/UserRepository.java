@@ -11,8 +11,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository  extends JpaRepository<User,Integer> {
 
-    @Query(value = "SELECT  max(ID) FROM USUARIOS ", nativeQuery = true)
-    Integer metodo();
+
     User findByUsername(String username);
 
     Optional<User> findById(Integer id);

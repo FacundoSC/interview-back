@@ -28,6 +28,7 @@ public class UserController {
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> getUsers(HttpServletRequest request) {
+        String token = request.getHeader("authorization").split(" ")[1];
         return ResponseEntity.ok().body(userService.findAll());
     }
 

@@ -6,6 +6,7 @@ import com.meli.interview.back.subscription_api.service.UserServiceImpl;
 import com.meli.interview.back.subscription_api.datos.User;
 import com.meli.interview.back.subscription_api.datos.UserSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.http.HttpResponse;

@@ -1,4 +1,4 @@
-package com.meli.interview.back.subscription_api.datos;
+package com.meli.interview.back.subscription_api.datos.DTO;
 
 public class UserRequestDTO {
     private String username;

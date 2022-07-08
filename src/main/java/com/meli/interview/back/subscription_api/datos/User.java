@@ -7,7 +7,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "usuarios")
-public class User   {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -19,21 +19,17 @@ public class User   {
     @Column
     private String password;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Subscription> subscriptions;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<User> friends;
+
     public User(String name, String username, String password) {
-        this.id = 1;
         this.name = name;
         this.username = username;
         this.password = password;
     }
-
-
-    /*
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "USUARIOS_ROLES", joinColumns = {
-            @JoinColumn(name = "USUARIO_ID")}, inverseJoinColumns = {
-            @JoinColumn(name = "ROLE_ID")})
-    private Set<Role> roles;*/
-
 
 
     public User() {
@@ -57,12 +53,6 @@ public class User   {
         return friends;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private List<Subscription> subscriptions ;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<User> friends ;
-
     public List<Subscription> getSubscriptions() {
         return subscriptions;
     }
@@ -71,10 +61,7 @@ public class User   {
         this.subscriptions = subscriptions;
     }
 
-
-
-
-        public String getName() {
+    public String getName() {
         return name;
     }
 
@@ -98,8 +85,14 @@ public class User   {
         this.password = password;
     }
 
-
-    public void setId(Integer id) {
-        this.id = id;
+    public void addFriend(User newFriend) {
+        this.friends.add(newFriend);
     }
+
+    /*
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "USUARIOS_ROLES", joinColumns = {
+            @JoinColumn(name = "USUARIO_ID")}, inverseJoinColumns = {
+            @JoinColumn(name = "ROLE_ID")})
+    private Set<Role> roles;*/
 }

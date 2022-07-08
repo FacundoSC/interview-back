@@ -21,3 +21,13 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+
+# carpeta donde se descarga el  gradle
+.gradle
+
+# configuracion  ide intellij
+.idea
+
+# carpeta que se usa cuando se compila el codigo fuente y  el codigo test
+build.gradle

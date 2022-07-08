@@ -1,24 +1,21 @@
 package com.meli.interview.back.subscription_api.service;
 
-import com.meli.interview.back.subscription_api.datos.User;
-
 import com.meli.interview.back.subscription_api.datos.DTO.UserRequestDTO;
+import com.meli.interview.back.subscription_api.datos.DTO.UserResponseDTO;
+import com.meli.interview.back.subscription_api.datos.User;
 import com.meli.interview.back.subscription_api.exception.UserNotFoundException;
 import com.meli.interview.back.subscription_api.exception.UserNotLoggedInException;
-
 
 import java.util.List;
 
 public interface UserService {
-    User getUser(Integer id);
+    UserResponseDTO save(User user);
 
-    User save(User user);
+    List<UserResponseDTO> findAll();
 
-    List<User> findAll();
-
-    User obtenerUsuarioPorCredenciales(UserRequestDTO usuario) throws Exception;
+    User obtenerUsuarioPorCredenciales(UserRequestDTO usuario) throws UserNotLoggedInException;
 
     User getUserByUsername(String username) throws UserNotFoundException;
 
-    User addFriend(String newFriendUsername);
+    UserResponseDTO addFriend(String newFriendUsername);
 }

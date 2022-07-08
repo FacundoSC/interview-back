@@ -13,7 +13,7 @@ import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerWebClientTest {
-
+/*
     @Autowired
     private UserService userService;
 
@@ -65,5 +65,5 @@ class UserControllerWebClientTest {
 
     @Test
     void suscripciones() {
-    }
+    }*/
 }

@@ -19,20 +19,10 @@ import java.util.Objects;
 @Service
 public class SubscriptionServiceImpl implements SubscriptionService {
 
-    private String jwt;
-
-    public void setJwt(String jwt) {
-        this.jwt = jwt;
-    }
-
-    public SubscriptionServiceImpl() {
-    }
-
     @Autowired
     private SubscriptionRepository subscriptionRepository;
     @Autowired
-    private UserRepository userRepository ;
-
+    private UserRepository userRepository;
 
     /**
      * Devuelve el costo total de las suscripciones de un usuario siempre que el usuario que esté logueado,
@@ -48,28 +38,27 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         User friend = userRepository.findByUsername(userdto.getUsername());
 
         if (!Objects.isNull(friend)) {
-            ArrayList<Subscription> subscriptionList = new ArrayList<Subscription>();
-
             User loggedUser = UserSession.getInstance().getLoggedUser();
 
             if (loggedUser != null) {
-                boolean isFriend = friend.getFriends().contains(loggedUser);
-                //realizar con stream parallel.
+                boolean isFriend = loggedUser
+                        .getFriends()
+                        .parallelStream()
+                        .anyMatch(a -> a.equals(friend));
 
                 if (isFriend) {
-                    subscriptionList = new ArrayList<Subscription>(friend.getSubscriptions());
-
-                    return (float) subscriptionList.stream()
+                    return (float) friend.getSubscriptions()
+                            .stream()
                             .mapToDouble(Subscription::getPrice)
                             .sum();
                 }
                 throw new FriendNotFoundException("El usuario indicado no figura en la lista de amigos.");
             } else {
-                throw new UserNotLoggedInException("");
+                throw new UserNotLoggedInException("No hay ningún usuario logeado actualmente");
             }
         } else {
             throw new EntityNotFoundException("El usuario indicado no existe");
         }
     }
 
-}//End of class
+}

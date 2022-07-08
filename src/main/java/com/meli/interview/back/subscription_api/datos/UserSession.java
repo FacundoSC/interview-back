@@ -5,30 +5,22 @@ import com.meli.interview.back.subscription_api.exception.UserNotLoggedInExcepti
 import com.meli.interview.back.subscription_api.service.UserService;
 import com.meli.interview.back.subscription_api.service.impl.UserServiceImpl;
 import com.meli.interview.back.subscription_api.util.JWTUtil;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class UserSession {
-
-    private UserService userService;
 
     private static final UserSession userSession = new UserSession();
 
-    public void setUserService(UserServiceImpl userService) {
-        this.userService = userService;
-    }
+    private UserService userService;
 
     private JWTUtil jwtUtil = new JWTUtil();
 
     private String jwt;
 
     private UserSession() {
-    }
-
-    public UserSession setJwt(String jwt) {
-        return this;
-    }
-
-    public String getJwt() {
-        return this.jwt;
     }
 
     public static UserSession getInstance() {

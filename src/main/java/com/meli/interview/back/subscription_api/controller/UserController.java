@@ -19,22 +19,13 @@ import java.util.List;
 @CrossOrigin("*")
 @RequestMapping("/api/v1")
 public class UserController {
-
     @Autowired
     private UserService userService;
 
     @Autowired
-    private JWTUtil jwtUtil;
-
-    @Autowired
     private SubscriptionService subscriptionService;
-
-    @GetMapping("/users")
-    public ResponseEntity<List<UserResponseDTO>> getUsers(HttpServletRequest request) {
-        String token = jwtUtil.obtainToken(request);
-        jwtUtil.validateJWT(token);
-        return ResponseEntity.ok().body(userService.findAll());
-    }
+    @Autowired
+    private JWTUtil jwtUtil;
 
     @PostMapping("/user/save")
     public ResponseEntity<UserResponseDTO> saveUser(@RequestBody User user) {
@@ -53,6 +44,13 @@ public class UserController {
         String token = jwtUtil.obtainToken(request);
         jwtUtil.validateJWT(token);
         return ResponseEntity.status(200).body("" + subscriptionService.getUserSubscriptionsCost(user));
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<List<UserResponseDTO>> getUsers(HttpServletRequest request) {
+        String token = jwtUtil.obtainToken(request);
+        jwtUtil.validateJWT(token);
+        return ResponseEntity.ok().body(userService.findAll());
     }
 
 }

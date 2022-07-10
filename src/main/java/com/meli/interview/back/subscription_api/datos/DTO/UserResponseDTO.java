@@ -19,4 +19,6 @@ public class UserResponseDTO {
         this.name = name;
         this.username = username;
     }
+
+
 }

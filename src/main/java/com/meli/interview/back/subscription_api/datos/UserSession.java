@@ -36,7 +36,7 @@ public class UserSession {
         throw new UserNotLoggedInException("No hay ningún usuario logueado actualmente");
     }
 
-    public String obtenerToken(UserServiceImpl userService, UserRequestDTO user) throws Exception {
+    public String obtenerToken(UserService userService, UserRequestDTO user) throws Exception {
         setUserService(userService);
         User usuarioLogueado = userService.obtenerUsuarioPorCredenciales(user);
         if (usuarioLogueado != null) {

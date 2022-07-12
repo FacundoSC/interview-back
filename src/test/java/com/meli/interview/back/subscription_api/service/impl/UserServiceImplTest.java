@@ -7,8 +7,12 @@ import com.meli.interview.back.subscription_api.datos.UserSession;
 import com.meli.interview.back.subscription_api.exception.UserNotFoundException;
 import com.meli.interview.back.subscription_api.exception.UserNotLoggedInException;
 import com.meli.interview.back.subscription_api.repository.UserRepository;
+import com.meli.interview.back.subscription_api.srcTest.NewUserTest;
+import com.meli.interview.back.subscription_api.util.JWTUtil;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -16,11 +20,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+
 
 @SpringBootTest
 class UserServiceImplTest {
@@ -28,17 +31,19 @@ class UserServiceImplTest {
     @Autowired
     private UserServiceImpl userService;
 
+    @Autowired
+    private NewUserTest newUserTest;
+
     @MockBean
     private UserRepository userRepositoryMock;
 
     @MockBean
-    private UserSession userSession;
-
+    private UserSession userSessionMock;
 
     @Test
     void save() {
-        when(userRepositoryMock.save(any())).thenReturn(new User("PruebaSave","PruebaSave","PruebaSave"));
-        assertEquals("PruebaSave", userService.save(new User()).getName());
+        when(userRepositoryMock.save(any())).thenReturn(newUserTest.newUserFriendMicky());
+        assertEquals("Micky", userService.save(new User()).getName());
         assertTrue(userService.save(new User()) instanceof UserResponseDTO);
 
         verify(userRepositoryMock, times(2)).save(new User());
@@ -49,24 +54,12 @@ class UserServiceImplTest {
     @Test
     void findAll() {
 
-        User userUno = new User("PruebaUno","PruebaUno","PruebaUno");
-        User userDos = new User("PruebaDos","PruebaDos","PruebaDos");
-        List<User> userListUno = Arrays.asList(userDos);
-        List<User> userListDos = Arrays.asList(userUno);
-        userUno.setFriends(userListUno);
-        userDos.setFriends(userListDos);
-        List<User> userList = new ArrayList<>();
-        userList.add(userUno);
-        userList.add(userDos);
-
-
-        when(userRepositoryMock.findAll()).thenReturn(userList);
-
+        when(userRepositoryMock.findAll()).thenReturn(newUserTest.newUserList());
 
         assertNotNull(userService.findAll());
         assertTrue(userService.findAll().size() > 1);
-        assertEquals("PruebaUno", userService.findAll().get(0).getName());
-        assertTrue(userService.findAll().get(0) instanceof  UserResponseDTO );
+        assertEquals("Micky", userService.findAll().get(0).getName());
+        assertTrue(userService.findAll().get(0) instanceof UserResponseDTO);
 
         verify(userRepositoryMock, times(4)).findAll();
 
@@ -75,34 +68,31 @@ class UserServiceImplTest {
 
     @Test
     void obtenerUsuarioPorCredenciales() {
-        User userUno = new User("PruebaUno","PruebaUno","PruebaUno");
-        UserRequestDTO userRequestDTO=new UserRequestDTO();
-        userRequestDTO.setUsername("PruebaUno");
-        userRequestDTO.setPassword("PruebaUno");
-        when(userRepositoryMock.findByUsername(any())).thenReturn(userUno);
 
-        assertEquals("PruebaUno", userService.obtenerUsuarioPorCredenciales(userRequestDTO).getName());
-        assertTrue(userService.obtenerUsuarioPorCredenciales(userRequestDTO) instanceof User);
+        when(userRepositoryMock.findByUsername(any())).thenReturn(newUserTest.newUserFriendMicky());
+
+        assertEquals("Micky", userService.obtenerUsuarioPorCredenciales(newUserTest.newUserRequestDTOMicky()).getName());
+        assertTrue(userService.obtenerUsuarioPorCredenciales(newUserTest.newUserRequestDTOMicky()) instanceof User);
 
         Exception e = assertThrows(UserNotLoggedInException.class, () -> {
             userService.obtenerUsuarioPorCredenciales(new UserRequestDTO());
 
         });
-        assertEquals(e.getMessage() ,  "Usuario o contraseña inválidos");
+        assertEquals(e.getMessage(), "Usuario o contraseña inválidos");
         assertTrue(e instanceof UserNotLoggedInException);
 
 
-        verify(userRepositoryMock, times(2)).findByUsername(userRequestDTO.getUsername());
+        verify(userRepositoryMock, times(2)).findByUsername((newUserTest.newUserRequestDTOMicky()).getUsername());
     }
 
     @Test
     void getUserByUsername() {
-        User userUno = new User("PruebaUno","PruebaUno","PruebaUno");
-        when(userRepositoryMock.findByUsername(any())).thenReturn(userUno);
 
-        assertEquals("PruebaUno", userService.getUserByUsername("PruebaUno").getName());
-        assertTrue(userService.getUserByUsername("PruebaUno") instanceof User);
-        verify(userRepositoryMock, times(2)).findByUsername("PruebaUno");
+        when(userRepositoryMock.findByUsername(any())).thenReturn(newUserTest.newUserFriendMicky());
+
+        assertEquals(newUserTest.newUserFriendMicky().getName(), userService.getUserByUsername(newUserTest.newUserFriendMicky().getName()).getName());
+        assertTrue(userService.getUserByUsername(newUserTest.newUserFriendMicky().getUsername()) instanceof User);
+        verify(userRepositoryMock, times(2)).findByUsername(newUserTest.newUserFriendMicky().getUsername());
 
         when(userRepositoryMock.findByUsername(any())).thenReturn(null);
         Exception e = assertThrows(UserNotFoundException.class, () -> {
@@ -110,23 +100,25 @@ class UserServiceImplTest {
 
         });
 
-        assertEquals(e.getMessage() ,  "El usuario perteneciente al token no existe");
+        assertEquals(e.getMessage(), "El usuario perteneciente al token no existe");
         assertTrue(e instanceof UserNotFoundException);
     }
 
     @Test
-    void addFriend() {
-        User newFriend = new User("Craggie","PruebaUno","PruebaUno");
-        User currentUser = new User("PruebaUno","PruebaUno","PruebaUno");
-        when(UserSession.getInstance().getLoggedUser()).thenReturn(currentUser);
-        when(userRepositoryMock.save(newFriend)).thenReturn(newFriend);
-        when(userRepositoryMock.save(currentUser)).thenReturn(currentUser);
+    void addFriend() throws Exception {
+        when(userRepositoryMock.save(any())).thenReturn(newUserTest.newUserSesion());
+        when(userRepositoryMock.findByUsername("fcordoba")).thenReturn(newUserTest.newUserSesion());
+        UserSession.getInstance().obtenerToken(userService, newUserTest.newUserRequestDTOSesion());
 
-        assertEquals("PruebaUno", userService.addFriend("Craggie").getName());
-       // when(userRepositoryMock.findByUsername(any())).thenReturn(userUno);
+        when(userRepositoryMock.findByUsername("mscurrell0@unicef.org")).thenReturn(newUserTest.newUserFriendMicky());
+        when(userRepositoryMock.save(newUserTest.newUserFriendMicky())).thenReturn(newUserTest.newUserFriendMicky());
+
+        assertEquals("Facundo", userService.addFriend("mscurrell0@unicef.org").getName());
+        assertTrue(userService.addFriend("mscurrell0@unicef.org") instanceof UserResponseDTO);
+
+
+
     }
 
-    @Test
-    void convertFriendList() {
-    }
+
 }

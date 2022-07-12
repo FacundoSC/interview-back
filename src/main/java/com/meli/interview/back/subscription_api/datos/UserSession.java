@@ -3,7 +3,6 @@ package com.meli.interview.back.subscription_api.datos;
 import com.meli.interview.back.subscription_api.datos.DTO.UserRequestDTO;
 import com.meli.interview.back.subscription_api.exception.UserNotLoggedInException;
 import com.meli.interview.back.subscription_api.service.UserService;
-import com.meli.interview.back.subscription_api.service.impl.UserServiceImpl;
 import com.meli.interview.back.subscription_api.util.JWTUtil;
 import lombok.Getter;
 import lombok.Setter;

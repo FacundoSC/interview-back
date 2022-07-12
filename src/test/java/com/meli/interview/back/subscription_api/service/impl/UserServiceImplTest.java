@@ -58,7 +58,7 @@ class UserServiceImplTest {
 
         assertNotNull(userService.findAll());
         assertTrue(userService.findAll().size() > 1);
-        assertEquals("Micky", userService.findAll().get(0).getName());
+        assertEquals("Konstantine", userService.findAll().get(0).getName());
         assertTrue(userService.findAll().get(0) instanceof UserResponseDTO);
 
         verify(userRepositoryMock, times(4)).findAll();
@@ -90,9 +90,9 @@ class UserServiceImplTest {
 
         when(userRepositoryMock.findByUsername(any())).thenReturn(newUserTest.newUserFriendMicky());
 
-        assertEquals(newUserTest.newUserFriendMicky().getName(), userService.getUserByUsername(newUserTest.newUserFriendMicky().getName()).getName());
-        assertTrue(userService.getUserByUsername(newUserTest.newUserFriendMicky().getUsername()) instanceof User);
-        verify(userRepositoryMock, times(2)).findByUsername(newUserTest.newUserFriendMicky().getUsername());
+        assertEquals(newUserTest.newUserFriendMicky().getName(), userService.getUserByUsername(newUserTest.newUserFriendMicky().getUsername()).getName());
+        assertTrue(userService.getUserByUsername(any()) instanceof User);
+        verify(userRepositoryMock, times(1)).findByUsername(newUserTest.newUserFriendMicky().getUsername());
 
         when(userRepositoryMock.findByUsername(any())).thenReturn(null);
         Exception e = assertThrows(UserNotFoundException.class, () -> {

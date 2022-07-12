@@ -5,8 +5,6 @@ bsrc/test/java/com/meli/interview/back/subscription_api/controller/UserControlle
 asrc/test/java/com/meli/interview/back/subscription_api/controller/UserControllerResrTemplate.java,0\4\040329a22b2fa480cfa834e73d029f917a0b0f30
 Œ
 \src/main/java/com/meli/interview/back/subscription_api/controller/SuscripcionController.java,0\d\0d21edd8e64ebd9ff6a11ff5aa34a2e4e32c878a
-ƒ
-Ssrc/main/java/com/meli/interview/back/subscription_api/SubscriptionApplication.java,e\a\ea6a9879f03fafcb2c14971c186cd32c14e5134b
 „
 Tsrc/main/java/com/meli/interview/back/subscription_api/datos/DTO/UserRequestDTO.java,0\0\00411e5705e99636078c00e82679e37b21aeecf6
 x

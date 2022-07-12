@@ -22,7 +22,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Autowired
     private SubscriptionRepository subscriptionRepository;
     @Autowired
-    private UserRepository userRepository ;
+    private UserRepository userRepository;
 
     /**
      * Devuelve el costo total de las suscripciones de un usuario siempre que el usuario que esté logueado,
@@ -38,18 +38,17 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         User friend = userRepository.findByUsername(userdto.getUsername());
 
         if (!Objects.isNull(friend)) {
-            ArrayList<Subscription> subscriptionList;
-
             User loggedUser = UserSession.getInstance().getLoggedUser();
 
             if (loggedUser != null) {
-                boolean isFriend = friend.getFriends().contains(loggedUser);
-                //realizar con stream parallel.
+                boolean isFriend = loggedUser
+                        .getFriends()
+                        .parallelStream()
+                        .anyMatch(a -> a.equals(friend));
 
                 if (isFriend) {
-                    subscriptionList = new ArrayList<Subscription>(friend.getSubscriptions());
-
-                    return (float) subscriptionList.stream()
+                    return (float) friend.getSubscriptions()
+                            .stream()
                             .mapToDouble(Subscription::getPrice)
                             .sum();
                 }

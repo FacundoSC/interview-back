@@ -31,12 +31,12 @@ public class UserServiceImpl implements UserService {
         List<UserResponseDTO> userResponseDTOList = new ArrayList<>();
         List<User> userList = userRepository.findAll();
 
-        for (User user : userList) { //TODO Se podría aplicar parallel para que sea más rápido
+        userList.parallelStream().forEach(user -> {
             userResponseDTOList.add(new UserResponseDTO(user.getName(),
                     user.getUsername(),
                     convertFriendList(user.getFriends()),
                     user.getSubscriptions()));
-        }
+        });
 
         return userResponseDTOList;
     }
@@ -96,9 +96,9 @@ public class UserServiceImpl implements UserService {
         ArrayList<String> friendStringList = new ArrayList<>();
 
         if (!friendList.isEmpty()) {
-            for (User user : friendList) { //TODO Se podría aplicar parallel para que sea más rápido
+            friendList.parallelStream().forEach(user -> {
                 friendStringList.add(user.getUsername());
-            }
+            });
         }
 
         return friendStringList;
